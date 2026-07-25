@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/reports";
+
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,6 +40,7 @@ export default function LoginPage() {
         <h1 className="text-3xl font-semibold text-slate-50">
           Recruiter login
         </h1>
+
         <p className="mt-2 text-sm text-slate-400">
           This section is restricted to internal recruiters only. Use the shared
           team password and do not share it outside the recruiting team.
@@ -56,7 +58,7 @@ export default function LoginPage() {
             />
           </label>
 
-          {error ? <p className="text-sm text-rose-400">{error}</p> : null}
+          {error && <p className="text-sm text-rose-400">{error}</p>}
 
           <button
             type="submit"
@@ -68,5 +70,13 @@ export default function LoginPage() {
         </form>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
